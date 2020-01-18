@@ -1,0 +1,28 @@
+version: '2'
+services:
+  proxy:
+    image: nginx:alpine
+    restart: always
+    volumes:
+      - ./src/conf/proxy:/etc/nginx
+      - ./src/html/proxy:/usr/share/nginx/html
+    ports:
+    - 80:80
+
+  site1.com:
+    image: nginx:alpine
+    restart: always
+    volumes:
+      - ./src/conf/site1.com:/etc/nginx
+      - ./src/html/site1.com:/usr/share/nginx/html
+    ports:
+    - 8081
+
+  site2.com:
+    image: nginx:alpine
+    restart: always
+    volumes:
+      - ./src/conf/site2.com:/etc/nginx
+      - ./src/html/site2.com:/usr/share/nginx/html
+    ports:
+    - 8082
