@@ -60,10 +60,6 @@ Example Playbook
   roles:
     - nginx-docker-compose
 ```
-License
--------
-
-Apache
 
 Author Information
 ------------------
