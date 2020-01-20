@@ -1,0 +1,14 @@
+---
+- name: Copy projects
+  copy:
+    src: 'projects/'
+    dest: '~/projects/'
+  register: copy_projects
+  until: copy_projects is succeeded
+
+- name: Deploy docker-compose projects
+  docker_compose:
+    project_src: '~/projects/{{ item }}'
+    state: present
+  become: true
+  with_items: '{{ deploy_projects }}'

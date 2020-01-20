@@ -1,0 +1,24 @@
+---
+# Docker  options
+docker_install: true
+docker_version: 18.06
+docker_edition: 'ce'
+
+# Docker Compose options
+docker_install_compose: true
+docker_compose_version: latest
+
+# Deploy options
+deploy_compose: true
+deploy_projects:
+  - nginx
+
+# For Python 3, use python3-pip.
+pip_install: true
+pip_package: python3
+pip_install_packages:
+  - pip
+  - setuptools
+  - PyYAML
+  - docker
+  - docker-compose

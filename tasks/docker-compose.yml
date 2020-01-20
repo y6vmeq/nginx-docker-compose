@@ -1,0 +1,17 @@
+---
+- name: Check latest docker-compose version
+  set_fact:
+    compose_latest_version: >-
+      {{ lookup('url', 'https://github.com/docker/compose/releases/latest') |
+        regex_findall('download/([0-9]+[.][0-9]+[.][0-9]+)') | first }}
+    when: compose_version == 'latest'
+  changed_when: false
+
+- name: Install Docker Compose v.{{ compose_latest_version | default(docker_compose_version) }}
+  get_url:
+    url: https://github.com/docker/compose/releases/download/{{ compose_latest_version | default(docker_compose_version) }}/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 0755
+  register: installed_compose
+  retries: 30
+  until: installed_compose is succeeded
