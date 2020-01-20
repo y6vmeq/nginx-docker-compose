@@ -8,10 +8,12 @@
   changed_when: false
 
 - name: Install Docker Compose v.{{ compose_latest_version | default(docker_compose_version) }}
-  get_url:
-    url: https://github.com/docker/compose/releases/download/{{ compose_latest_version | default(docker_compose_version) }}/docker-compose-Linux-x86_64
-    dest: /usr/local/bin/docker-compose
-    mode: 0755
-  register: installed_compose
-  retries: 30
-  until: installed_compose is succeeded
+  pip:
+    name:  docker-compose
+    version: '{{ compose_latest_version | default(docker_compose_version) }}'
+    state: present
+    executable: '{{ pip_executable }}'
+    extra_args: --upgrade
+  register: status
+  until: status is succeeded
+  become: true

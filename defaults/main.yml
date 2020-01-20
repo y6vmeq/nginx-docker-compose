@@ -21,4 +21,3 @@ pip_install_packages:
   - setuptools
   - PyYAML
   - docker
-  - docker-compose
