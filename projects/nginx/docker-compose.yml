@@ -3,12 +3,24 @@ version: '2'
 services:
   proxy:
     image: nginx:alpine
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./src/conf/proxy:/etc/nginx
+      - ./src/conf/certbot:/etc/letsencrypt
+      - ./src/html/certbot:/var/www/certbot
       - ./src/html/proxy:/usr/share/nginx/html
     ports:
-    - 80:80
+      - 80:80
+      - 443:443
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   site1.com:
     image: nginx:alpine
@@ -17,7 +29,7 @@ services:
       - ./src/conf/site1.com:/etc/nginx
       - ./src/html/site1.com:/usr/share/nginx/html
     ports:
-    - 8081
+    - 8081:80
 
   site2.com:
     image: nginx:alpine
@@ -26,4 +38,4 @@ services:
       - ./src/conf/site2.com:/etc/nginx
       - ./src/html/site2.com:/usr/share/nginx/html
     ports:
-    - 8082
+    - 8082:80
